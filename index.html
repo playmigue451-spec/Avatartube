@@ -75,46 +75,353 @@ const OFFICIAL_VIDEOS = [
  {id:'katara-toph',yt:'7-vYPo81Ys8',title:'¡Toph y Katara se hacen un cambio de look!',category:'Humor',tag:'TOPH Y KATARA',duration:'0:43',description:'Un clip corto y divertido con Toph y Katara.',channel:'Nickelodeon en Español'},
  {id:'peleas2h',yt:'pSoZrod52LM',title:'Todas las peleas épicas de Avatar: 2 horas de acción',category:'Batallas',tag:'BATALLAS ÉPICAS',duration:'2 h 18 min',description:'Una recopilación larga de enfrentamientos de Avatar.',channel:'Nickelodeon en Español'}
 ];
-const DB_NAME='avatarTubeCreatorDB', DB_VERSION=1;let db=null, channelProfile=null, uploadedVideos=[], favorites=new Set();let activeFilter='Todos',currentView='all',searchTerm='';const objectUrls=new Map();
-const $=id=>document.getElementById(id);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function toast(message){const t=$('toast');t.textContent=message;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2600)}
-function openDB(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){reject(new Error('Este navegador no permite almacenamiento local de videos.'));return}const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains('settings'))d.createObjectStore('settings',{keyPath:'key'});if(!d.objectStoreNames.contains('uploads'))d.createObjectStore('uploads',{keyPath:'id'})};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error('No se pudo abrir la base local.'))})}
-function idbGet(store,key){return new Promise((resolve,reject)=>{const r=db.transaction(store,'readonly').objectStore(store).get(key);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})}
-function idbGetAll(store){return new Promise((resolve,reject)=>{const r=db.transaction(store,'readonly').objectStore(store).getAll();r.onsuccess=()=>resolve(r.result||[]);r.onerror=()=>reject(r.error)})}
-function idbPut(store,value){return new Promise((resolve,reject)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).put(value);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error||new Error('No se pudo guardar.'));tx.onabort=()=>reject(tx.error||new Error('Guardado cancelado.'))})}
-function idbDelete(store,key){return new Promise((resolve,reject)=>{const tx=db.transaction(store,'readwrite');tx.objectStore(store).delete(key);tx.oncomplete=()=>resolve();tx.onerror=()=>reject(tx.error)})}
-function blobUrl(key,blob){if(objectUrls.has(key))return objectUrls.get(key);const url=URL.createObjectURL(blob);objectUrls.set(key,url);return url}
-function initials(name){return (name||'AT').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'AT'}
-function allVideos(){return [...OFFICIAL_VIDEOS.map(v=>({...v,kind:'official',poster:`https://i.ytimg.com/vi/${v.yt}/hqdefault.jpg`})),...uploadedVideos.map(v=>({...v,kind:'local',poster:v.thumbBlob?blobUrl('thumb-'+v.id,v.thumbBlob):'',channel:channelProfile?.name||'Mi canal'}))]}
-function setProfileUI(){const name=channelProfile?.name||'Mi canal',avatar=$('avatarButton');avatar.innerHTML='';if(channelProfile?.avatarBlob){const img=document.createElement('img');img.src=blobUrl('avatar',channelProfile.avatarBlob);img.alt='Foto del canal';avatar.appendChild(img)}else avatar.textContent=initials(name);$('channelName').textContent=name;$('channelHandle').textContent=channelProfile?'@'+channelProfile.handle:'Todavía no has creado tu canal';$('channelAbout').textContent=channelProfile?.about||'Crea tu canal para compartir tus propios videos sobre Avatar.';$('channelAvatar').innerHTML='';if(channelProfile?.avatarBlob){const img=document.createElement('img');img.src=blobUrl('avatar',channelProfile.avatarBlob);img.alt='Foto del canal';$('channelAvatar').appendChild(img)}else $('channelAvatar').textContent=initials(name)}
-function matchesView(v){if(currentView==='favorites')return favorites.has(v.id);if(currentView==='uploads'||currentView==='channel')return v.kind==='local';return true}
-function render(){setProfileUI();const list=allVideos().filter(v=>(activeFilter==='Todos'||v.category===activeFilter)&&matchesView(v)&&(v.title+' '+v.category+' '+v.tag+' '+(v.description||'')+' '+(v.channel||'')).toLocaleLowerCase('es').includes(searchTerm.toLocaleLowerCase('es')));const titles={all:'Videos para dominar los cuatro elementos',explore:'Explora el mundo de Aang',favorites:'Tus videos favoritos',channel:channelProfile?'Videos de '+channelProfile.name:'Tu canal',uploads:'Tus videos publicados'};$('sectionTitle').textContent=titles[currentView]||titles.all;$('sectionSubtitle').textContent=currentView==='favorites'?'Los videos que guardaste para ver después.':(currentView==='channel'||currentView==='uploads')?'Tus publicaciones guardadas en este navegador.':'Videos oficiales en español y publicaciones de la comunidad.';$('videoCount').textContent=list.length+' '+(list.length===1?'VIDEO':'VIDEOS');$('channelHero').classList.toggle('show',currentView==='channel'||currentView==='uploads');$('chips').classList.toggle('hidden',currentView==='channel'||currentView==='uploads');const grid=$('videoGrid');grid.innerHTML='';if(!list.length){grid.innerHTML=`<div class="empty">${currentView==='channel'&&!channelProfile?'Todavía no tienes un canal. Crea uno para comenzar.':'No hay videos con esos filtros todavía.'}<br><br><button class="btn btn-primary" id="emptyAction">${currentView==='channel'&&!channelProfile?'＋ Crear mi canal':'＋ Subir un video'}</button></div>`;$('emptyAction').addEventListener('click',()=>currentView==='channel'&&!channelProfile?openChannelDialog():openUploadDialog());return}
- for(const v of list){const card=document.createElement('article');card.className='video-card';const isFav=favorites.has(v.id);const poster=v.poster?`<img src="${esc(v.poster)}" alt="Miniatura original: ${esc(v.title)}" loading="lazy" referrerpolicy="no-referrer">`:'<div class="thumb-placeholder">AVATAR TUBE</div>';card.innerHTML=`<div class="thumb">${poster}<span class="tag">${esc(v.tag||'COMUNIDAD')}</span><span class="duration">${esc(v.duration||'Video')}</span><button class="play" aria-label="Reproducir ${esc(v.title)}">▶</button></div><div class="info"><h3 class="video-title">${esc(v.title)}</h3><div class="meta"><span>${esc(v.category)}</span><span>·</span><span>${esc(v.channel||'Comunidad Avatar')}</span>${v.kind==='local'?'<span>·</span><span style="color:#80d9ac">TU VIDEO</span>':''}</div><div class="actions"><button class="watch">▶ Ver ahora</button><button class="fav ${isFav?'saved':''}">${isFav?'★ Guardado':'☆ Favorito'}</button>${v.kind==='local'?'<button class="delete-video">Eliminar</button>':''}</div></div>`;
- const play=()=>playVideo(v);card.querySelector('.play').addEventListener('click',play);card.querySelector('.watch').addEventListener('click',play);card.querySelector('.fav').addEventListener('click',()=>{favorites.has(v.id)?favorites.delete(v.id):favorites.add(v.id);try{localStorage.setItem('avatarTubeFavorites',JSON.stringify([...favorites]))}catch(e){}render();toast(favorites.has(v.id)?'Guardado en favoritos':'Quitado de favoritos')});if(v.kind==='local')card.querySelector('.delete-video').addEventListener('click',async()=>{if(!confirm('¿Eliminar este video de tu canal en este navegador?'))return;await idbDelete('uploads',v.id);uploadedVideos=uploadedVideos.filter(x=>x.id!==v.id);const u=objectUrls.get('video-'+v.id);if(u){URL.revokeObjectURL(u);objectUrls.delete('video-'+v.id)}render();toast('Video eliminado de tu canal')});const img=card.querySelector('img');if(img)img.addEventListener('error',()=>{img.style.display='none';card.querySelector('.thumb').style.background='linear-gradient(135deg,#163b56,#24314a)'});grid.appendChild(card)} }
-function playVideo(v){$('playerPanel').classList.add('open');$('playerTitle').textContent=v.title;$('playerDesc').textContent=(v.channel||'Comunidad Avatar')+' · '+(v.category||'Avatar');$('playerStatus').textContent=v.kind==='local'?'Cargando tu video desde el almacenamiento local…':'Cargando reproductor integrado…';$('playerPanel').scrollIntoView({behavior:'smooth',block:'start'});const iframe=$('youtubePlayer'),video=$('localPlayer');iframe.src='about:blank';video.pause();video.removeAttribute('src');video.load();if(v.kind==='official'){video.classList.add('hidden');iframe.classList.remove('hidden');iframe.src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.yt)}?autoplay=1&rel=0&hl=es&playsinline=1`; $('playerStatus').textContent='Video oficial en español · Reproducción integrada en AVATAR TUBE. Si el canal desactiva la inserción, YouTube puede bloquear ese título.'}else{iframe.classList.add('hidden');video.classList.remove('hidden');video.src=blobUrl('video-'+v.id,v.videoBlob);video.load();const playPromise=video.play();if(playPromise)playPromise.catch(()=>{$('playerStatus').textContent='Tu video está cargado. Pulsa ▶ en los controles para reproducirlo.'})}}
-function closePlayer(){const iframe=$('youtubePlayer'),video=$('localPlayer');iframe.src='about:blank';video.pause();video.removeAttribute('src');video.load();$('playerPanel').classList.remove('open')}
-function showDialog(id){$(id).classList.add('open')}function hideDialog(id){$(id).classList.remove('open')}
-function openChannelDialog(){ $('channelDialogTitle').textContent=channelProfile?'Editar mi canal':'Crea tu canal';$('channelNameInput').value=channelProfile?.name||'';$('channelHandleInput').value=channelProfile?.handle||'';$('channelAboutInput').value=channelProfile?.about||'';$('channelImageInput').value='';showDialog('channelDialog')}
-function openUploadDialog(){if(!channelProfile){toast('Primero crea tu canal para poder publicar.');openChannelDialog();return}$('uploadForm').reset();showDialog('uploadDialog')}
-function fileAsBlob(input){return input.files&&input.files[0]?input.files[0]:null}
-async function captureFirstFrame(file){
- const url=URL.createObjectURL(file),video=document.createElement('video');video.muted=true;video.preload='auto';video.playsInline=true;
- try{
-  await new Promise((resolve,reject)=>{video.onloadedmetadata=resolve;video.onerror=()=>reject(new Error('No se pudo leer el video para generar la miniatura.'));video.src=url;});
-  if(Number.isFinite(video.duration)&&video.duration>0.25){await new Promise((resolve,reject)=>{video.onseeked=resolve;video.onerror=()=>reject(new Error('No se pudo capturar el fotograma.'));video.currentTime=Math.min(1,video.duration/4);});}
-  if(!video.videoWidth||!video.videoHeight)throw new Error('El video no entregó fotogramas.');
-  const canvas=document.createElement('canvas'),scale=Math.min(1,640/video.videoWidth);canvas.width=Math.max(1,Math.round(video.videoWidth*scale));canvas.height=Math.max(1,Math.round(video.videoHeight*scale));
-  const ctx=canvas.getContext('2d');ctx.drawImage(video,0,0,canvas.width,canvas.height);
-  return await new Promise(resolve=>canvas.toBlob(blob=>resolve(blob||null),'image/jpeg',0.84));
- }catch(err){console.warn('Miniatura automática no disponible:',err);return null;}
- finally{video.pause();video.removeAttribute('src');video.load();URL.revokeObjectURL(url);}
+
+const DB_NAME = 'avatarTubeCreatorDB', DB_VERSION = 1;
+let db = null, channelProfile = null, uploadedVideos = [], favorites = new Set();
+let activeFilter = 'Todos', currentView = 'all', searchTerm = '';
+const objectUrls = new Map();
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function toast(message) {
+  const t = $('toast');
+  t.textContent = message;
+  t.classList.add('show');
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
 }
-$('channelForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('channelNameInput').value.trim(),handle=$('channelHandleInput').value.trim().replace(/^@/,'').replace(/\s+/g,'').toLowerCase(),about=$('channelAboutInput').value.trim(),avatar=fileAsBlob($('channelImageInput'));if(!name||!handle){toast('Completa el nombre y usuario del canal.');return}if(!/^[a-z0-9._-]{3,24}$/.test(handle)){toast('El usuario debe tener 3 a 24 caracteres: letras, números, punto, guion o guion bajo.');return}channelProfile={key:'channel',name,handle,about,avatarBlob:avatar||channelProfile?.avatarBlob||null,createdAt:channelProfile?.createdAt||Date.now()};try{await idbPut('settings',channelProfile);hideDialog('channelDialog');setView('channel');toast('¡Tu canal está creado!')}catch(err){toast('No se pudo guardar el canal: '+err.message)}});
-$('uploadForm').addEventListener('submit',async e=>{e.preventDefault();if(!channelProfile){toast('Crea tu canal antes de subir videos.');return}const file=fileAsBlob($('videoFile')),thumb=fileAsBlob($('thumbnailFile')),title=$('uploadTitle').value.trim(),description=$('uploadDescription').value.trim(),category=$('uploadCategory').value;if(!file||!title){toast('Selecciona un video y escribe un título.');return}if(!file.type.startsWith('video/')){toast('El archivo seleccionado no parece ser un video.');return}if(file.size>200*1024*1024){toast('El video supera el límite de 200 MB de esta demo.');return}const id='user-'+(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(16).slice(2));const btn=$('publishUpload');btn.disabled=true;btn.textContent=thumb?'Guardando…':'Creando miniatura…';let finalThumb=thumb;if(!finalThumb)finalThumb=await captureFirstFrame(file);const record={id,title,description,category,tag:'PUBLICADO POR TI',duration:'Video propio',channel:channelProfile.name,videoBlob:file,thumbBlob:finalThumb||null,mime:file.type,createdAt:Date.now()};btn.textContent='Guardando…';try{await idbPut('uploads',record);uploadedVideos.unshift(record);hideDialog('uploadDialog');setView('uploads');toast('¡Video añadido a tu canal en este navegador!')}catch(err){toast('No se pudo guardar. Puede faltar espacio en el navegador. '+err.message)}finally{btn.disabled=false;btn.textContent='Publicar en mi canal'}});
-function setView(v){currentView=v;document.querySelectorAll('.navbtn[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));if(v==='explore')activeFilter='Todos';document.querySelectorAll('.chip').forEach(b=>b.classList.toggle('active',b.dataset.filter===activeFilter));render()}
-document.querySelectorAll('.navbtn[data-view]').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)));document.querySelectorAll('.chip').forEach(b=>b.addEventListener('click',()=>{activeFilter=b.dataset.filter;setView('all')}));$('searchForm').addEventListener('submit',e=>{e.preventDefault();searchTerm=$('searchInput').value.trim();setView('all')});$('searchInput').addEventListener('input',e=>{searchTerm=e.target.value.trim();render()});$('exploreHero').addEventListener('click',()=>{setView('explore');$('chips').scrollIntoView({behavior:'smooth',block:'center'})});$('createHero').addEventListener('click',openChannelDialog);$('createChannelSide').addEventListener('click',openChannelDialog);$('uploadTop').addEventListener('click',openUploadDialog);$('uploadBanner').addEventListener('click',openUploadDialog);$('editChannel').addEventListener('click',openChannelDialog);$('avatarButton').addEventListener('click',()=>channelProfile?setView('channel'):openChannelDialog());$('closePlayer').addEventListener('click',closePlayer);document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>hideDialog(b.dataset.close)));document.querySelectorAll('.dialog-backdrop').forEach(back=>back.addEventListener('click',e=>{if(e.target===back)back.classList.remove('open')}));document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('.dialog-backdrop.open').forEach(x=>x.classList.remove('open'))}});
-async function init(){try{db=await openDB();const p=await idbGet('settings','channel');channelProfile=p||null;uploadedVideos=await idbGetAll('uploads');uploadedVideos.sort((a,b)=>b.createdAt-a.createdAt)}catch(err){console.warn(err);toast('El almacenamiento local no está disponible en este navegador. Los videos que subas no podrán guardarse.')}try{favorites=new Set(JSON.parse(localStorage.getItem('avatarTubeFavorites')||'[]'))}catch(e){}render()}
-init();
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) {
+      reject(new Error('Este navegador no permite almacenamiento local de videos.'));
+      return;
+    }
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = () => {
+      const d = req.result;
+      if (!d.objectStoreNames.contains('settings')) d.createObjectStore('settings', {keyPath:'key'});
+      if (!d.objectStoreNames.contains('uploads')) d.createObjectStore('uploads', {keyPath:'id'});
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error || new Error('No se pudo abrir la base local.'));
+  });
+}
+
+function idbGet(store, key) {
+  return new Promise((resolve, reject) => {
+    const r = db.transaction(store, 'readonly').objectStore(store).get(key);
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = () => reject(r.error);
+  });
+}
+
+function idbGetAll(store) {
+  return new Promise((resolve, reject) => {
+    const r = db.transaction(store, 'readonly').objectStore(store).getAll();
+    r.onsuccess = () => resolve(r.result || []);
+    r.onerror = () => reject(r.error);
+  });
+}
+
+function idbPut(store, value) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).put(value);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error || new Error('No se pudo guardar.'));
+    tx.onabort = () => reject(tx.error || new Error('Guardado cancelado.'));
+  });
+}
+
+function idbDelete(store, key) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).delete(key);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
+function blobUrl(key, blob) {
+  if (objectUrls.has(key)) return objectUrls.get(key);
+  const url = URL.createObjectURL(blob);
+  objectUrls.set(key, url);
+  return url;
+}
+
+function initials(name) {
+  return (name || 'AT').trim().split(/\s+/).slice(0, 2).map(x => x[0] || '').join('').toUpperCase() || 'AT';
+}
+
+function allVideos() {
+  return [
+    ...OFFICIAL_VIDEOS.map(v => ({...v, kind:'official', poster:`https://i.ytimg.com/vi/${v.yt}/hqdefault.jpg`})),
+    ...uploadedVideos.map(v => ({...v, kind:'local', poster: v.thumbBlob ? blobUrl('thumb-'+v.id, v.thumbBlob) : '', channel: channelProfile?.name || 'Mi canal'}))
+  ];
+}
+
+function setProfileUI() {
+  const name = channelProfile?.name || 'Mi canal';
+  const avatar = $('avatarButton');
+  avatar.innerHTML = '';
+  if (channelProfile?.avatarBlob) {
+    const img = document.createElement('img');
+    img.src = blobUrl('avatar', channelProfile.avatarBlob);
+    img.alt = 'Foto del canal';
+    avatar.appendChild(img);
+  } else {
+    avatar.textContent = initials(name);
+  }
+  $('channelName').textContent = name;
+  $('channelHandle').textContent = channelProfile ? '@' + channelProfile.handle : 'Todavía no has creado tu canal';
+  $('channelAbout').textContent = channelProfile?.about || 'Crea tu canal para compartir tus propios videos sobre Avatar.';
+  $('channelAvatar').innerHTML = '';
+  if (channelProfile?.avatarBlob) {
+    const img = document.createElement('img');
+    img.src = blobUrl('avatar', channelProfile.avatarBlob);
+    img.alt = 'Foto del canal';
+    $('channelAvatar').appendChild(img);
+  } else {
+    $('channelAvatar').textContent = initials(name);
+  }
+}
+
+function matchesView(v) {
+  if (currentView === 'favorites') return favorites.has(v.id);
+  if (currentView === 'uploads' || currentView === 'channel') return v.kind === 'local';
+  return true;
+}
+
+function render() {
+  setProfileUI();
+  const list = allVideos().filter(v => 
+    (activeFilter === 'Todos' || v.category === activeFilter) &&
+    matchesView(v) &&
+    (v.title + ' ' + v.category + ' ' + v.tag + ' ' + (v.description || '') + ' ' + (v.channel || '')).toLocaleLowerCase('es').includes(searchTerm.toLocaleLowerCase('es'))
+  );
+
+  const titles = {
+    all: 'Videos para dominar los cuatro elementos',
+    explore: 'Explora el mundo de Aang',
+    favorites: 'Tus videos favoritos',
+    channel: channelProfile ? 'Videos de ' + channelProfile.name : 'Tu canal',
+    uploads: 'Tus videos publicados'
+  };
+
+  $('sectionTitle').textContent = titles[currentView] || titles.all;
+  $('sectionSubtitle').textContent = currentView === 'favorites' ? 'Los videos que guardaste para ver después.' : (currentView === 'channel' || currentView === 'uploads') ? 'Tus publicaciones guardadas en este navegador.' : 'Videos oficiales en español y publicaciones de la comunidad.';
+  $('videoCount').textContent = list.length + ' ' + (list.length === 1 ? 'VIDEO' : 'VIDEOS');
+  $('channelHero').classList.toggle('show', currentView === 'channel' || currentView === 'uploads');
+  $('chips').classList.toggle('hidden', currentView === 'channel' || currentView === 'uploads');
+
+  const grid = $('videoGrid');
+  grid.innerHTML = '';
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty">${currentView === 'channel' && !channelProfile ? 'Todavía no tienes un canal. Crea uno para comenzar.' : 'No hay videos con esos filtros todavía.'}<br><br><button class="btn btn-primary" id="emptyAction">${currentView === 'channel' && !channelProfile ? '＋ Crear mi canal' : '＋ Subir un video'}</button></div>`;
+    $('emptyAction').addEventListener('click', () => currentView === 'channel' && !channelProfile ? openChannelDialog() : openUploadDialog());
+    return;
+  }
+
+  for (const v of list) {
+    const card = document.createElement('article');
+    card.className = 'video-card';
+    const isFav = favorites.has(v.id);
+    const poster = v.poster ? `<img src="${esc(v.poster)}" alt="Miniatura original: ${esc(v.title)}" loading="lazy" referrerpolicy="no-referrer">` : '<div class="thumb-placeholder" style="display:grid;place-items:center;height:100%;color:var(--muted);font-weight:900;">AVATAR TUBE</div>';
+    
+    card.innerHTML = `<div class="thumb">${poster}<span class="tag">${esc(v.tag || 'COMUNIDAD')}</span><span class="duration">${esc(v.duration || 'Video')}</span><button class="play" aria-label="Reproducir ${esc(v.title)}">▶</button></div><div class="info"><h3 class="video-title">${esc(v.title)}</h3><div class="meta"><span>${esc(v.category)}</span><span>·</span><span>${esc(v.channel || 'Comunidad Avatar')}</span>${v.kind === 'local' ? '<span>·</span><span style="color:#80d9ac">TU VIDEO</span>' : ''}</div><div class="actions"><button class="watch">▶ Ver ahora</button><button class="fav ${isFav ? 'saved' : ''}">${isFav ? '★ Guardado' : '☆ Favorito'}</button>${v.kind === 'local' ? '<button class="delete-video">Eliminar</button>' : ''}</div></div>`;
+
+    const play = () => playVideo(v);
+    card.querySelector('.play').addEventListener('click', play);
+    card.querySelector('.watch').addEventListener('click', play);
+    card.querySelector('.fav').addEventListener('click', () => {
+      favorites.has(v.id) ? favorites.delete(v.id) : favorites.add(v.id);
+      try { localStorage.setItem('avatarTubeFavorites', JSON.stringify([...favorites])); } catch(e) {}
+      render();
+      toast(favorites.has(v.id) ? 'Guardado en favoritos' : 'Quitado de favoritos');
+    });
+
+    if (v.kind === 'local') {
+      card.querySelector('.delete-video').addEventListener('click', async () => {
+        if (!confirm('¿Eliminar este video de tu canal en este navegador?')) return;
+        await idbDelete('uploads', v.id);
+        uploadedVideos = uploadedVideos.filter(x => x.id !== v.id);
+        const u = objectUrls.get('video-' + v.id);
+        if (u) { URL.revokeObjectURL(u); objectUrls.delete('video-' + v.id); }
+        render();
+        toast('Video eliminado');
+      });
+    }
+    grid.appendChild(card);
+  }
+}
+
+function playVideo(v) {
+  const panel = $('playerPanel');
+  panel.classList.add('open');
+  $('playerTitle').textContent = v.title;
+  $('playerDesc').textContent = v.description || '';
+  
+  const yt = $('youtubePlayer');
+  const local = $('localPlayer');
+
+  if (v.kind === 'official') {
+    local.pause();
+    local.classList.add('hidden');
+    yt.classList.remove('hidden');
+    yt.src = `https://www.youtube-nocookie.com/embed/${v.yt}?autoplay=1&rel=0`;
+    $('playerStatus').textContent = 'Reproduciendo contenido oficial mediante reproductor integrado.';
+  } else {
+    yt.src = '';
+    yt.classList.add('hidden');
+    local.classList.remove('hidden');
+    local.src = blobUrl('video-' + v.id, v.videoBlob);
+    local.play().catch(() => {});
+    $('playerStatus').textContent = 'Reproduciendo video local desde el almacenamiento de tu navegador.';
+  }
+  panel.scrollIntoView({behavior: 'smooth'});
+}
+
+function closePlayer() {
+  const panel = $('playerPanel');
+  panel.classList.remove('open');
+  $('youtubePlayer').src = '';
+  $('localPlayer').pause();
+  $('localPlayer').src = '';
+}
+
+function openChannelDialog() {
+  if (channelProfile) {
+    $('channelNameInput').value = channelProfile.name || '';
+    $('channelHandleInput').value = channelProfile.handle || '';
+    $('channelAboutInput').value = channelProfile.about || '';
+  }
+  $('channelDialog').classList.add('open');
+}
+
+function openUploadDialog() {
+  if (!channelProfile) {
+    toast('Crea tu canal antes de subir videos.');
+    openChannelDialog();
+    return;
+  }
+  $('uploadForm').reset();
+  $('uploadDialog').classList.add('open');
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    db = await openDB();
+    const settings = await idbGetAll('settings');
+    for (const s of settings) {
+      if (s.key === 'channelProfile') channelProfile = s.value;
+    }
+    uploadedVideos = await idbGetAll('uploads');
+  } catch (e) {
+    console.warn(e);
+  }
+
+  try {
+    const favs = JSON.parse(localStorage.getItem('avatarTubeFavorites') || '[]');
+    favorites = new Set(favs);
+  } catch (e) {}
+
+  render();
+
+  // Event Listeners
+  $('closePlayer').addEventListener('click', closePlayer);
+  $('searchForm').addEventListener('submit', e => { e.preventDefault(); searchTerm = $('searchInput').value.trim(); render(); });
+  $('searchInput').addEventListener('input', e => { searchTerm = e.target.value.trim(); render(); });
+
+  document.querySelectorAll('.navbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.navbtn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentView = btn.dataset.view || 'all';
+      render();
+    });
+  });
+
+  document.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      activeFilter = chip.dataset.filter || 'Todos';
+      render();
+    });
+  });
+
+  $('uploadTop').addEventListener('click', openUploadDialog);
+  $('uploadBanner').addEventListener('click', openUploadDialog);
+  $('createHero').addEventListener('click', openChannelDialog);
+  $('createChannelSide').addEventListener('click', openChannelDialog);
+  $('editChannel').addEventListener('click', openChannelDialog);
+  $('avatarButton').addEventListener('click', () => { currentView = 'channel'; render(); });
+  $('exploreHero').addEventListener('click', () => { currentView = 'explore'; render(); });
+
+  document.querySelectorAll('[data-close]').forEach(el => {
+    el.addEventListener('click', () => {
+      $(el.dataset.close).classList.remove('open');
+    });
+  });
+
+  $('channelForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const name = $('channelNameInput').value.trim();
+    const handle = $('channelHandleInput').value.trim().replace(/^@/, '').replace(/\s+/g, '');
+    const about = $('channelAboutInput').value.trim();
+    const file = $('channelImageInput').files[0];
+
+    let avatarBlob = channelProfile?.avatarBlob;
+    if (file) avatarBlob = file;
+
+    channelProfile = { name, handle, about, avatarBlob };
+    try {
+      await idbPut('settings', { key: 'channelProfile', value: channelProfile });
+    } catch(e) {}
+
+    $('channelDialog').classList.remove('open');
+    render();
+    toast('¡Canal guardado con éxito!');
+  });
+
+  $('uploadForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    const file = $('videoFile').files[0];
+    if (!file) return;
+    const title = $('uploadTitle').value.trim();
+    const description = $('uploadDescription').value.trim();
+    const category = $('uploadCategory').value;
+    const thumbFile = $('thumbnailFile').files[0];
+
+    const id = 'local-' + Date.now();
+    const newVideo = {
+      id,
+      title,
+      description,
+      category,
+      tag: category.toUpperCase(),
+      duration: 'Local',
+      videoBlob: file,
+      thumbBlob: thumbFile || null,
+      channel: channelProfile?.name || 'Mi canal'
+    };
+
+    try {
+      await idbPut('uploads', newVideo);
+      uploadedVideos.push(newVideo);
+    } catch(e) {
+      toast('Error al guardar el video localmente.');
+      return;
+    }
+
+    $('uploadDialog').classList.remove('open');
+    currentView = 'uploads';
+    render();
+    toast('¡Video publicado en tu canal!');
+  });
+});
 </script>
 </body>
 </html>
