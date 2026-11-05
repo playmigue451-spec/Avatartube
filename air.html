@@ -4,51 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aire - AVATAR TUBE</title>
+    <style>
+    :root{
+        --bg:#081321;
+        --panel:#101f32;
+        --panel2:#162a42;
+        --panel3:#203955;
+        --line:#ffffff18;
+        --text:#f4f8ff;
+        --muted:#9db0c8;
+        --blue:#69d1ff;
+        --blue2:#a9e9ff;
+        --orange:#ffad70;
+        --green:#80d9ac;
+        --gold:#f8d58c;
+        --r:18px;
+        --shadow:0 18px 55px #0005
+    }
+    *{
+        box-sizing:border-box
+    }
+    html{
+        scroll-behavior:smooth
+    }
+    body{
+        margin:0;
+        background: radial-gradient(ellipse at 85% 10%, #1a3b5a 0%, transparent 38%), radial-gradient(ellipse at 0% 60%, #142d3e55 0%, transparent 33%), var(--bg);
+
+        color:var(--text);
+        font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--blue);
+        outline-offset:2px}a{color:var(--blue);
+        display:flex;
+        align-items:center !important;
+        text-align: center !important;
+    }
+    h1, h2, p {
+        text-align: center !important;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 15px;
+    }
+    .titulo{
+        background-color:var(--panel3);
+        width: auto;
+        height: auto;
+    }
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%; /* Opcional: para que se adapte bien a celulares */
+    }
+    @media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shell{grid-template-columns:185px minmax(0,1fr)}.brand{flex-basis:210px}}
+    @media(max-width:760px){.topbar{height:auto;min-height:72px;flex-wrap:wrap;gap:11px;padding:12px 14px}.brand{flex:1}.brandtag{display:none}.brandtitle{font-size:17px}.searchbar{order:3;flex-basis:100%;max-width:none}.top-actions .btn{padding:10px 11px;font-size:12px}.shell{display:block}.sidebar{display:flex;gap:5px;padding:9px 12px;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}.navbtn{width:auto;flex:0 0 auto;white-space:nowrap;margin:0;padding:10px 12px;font-size:12px}.sidebar-label,.element{display:none}.main{padding:18px 14px 38px}.hero{min-height:290px;padding:24px 21px}.hero h1{font-size:37px}.hero p{font-size:13px}.grid{gap:11px}.info{padding:10px}.video-title{font-size:12px;min-height:52px}.meta{font-size:9px}.actions{flex-wrap:wrap}.watch,.fav,.delete-video{font-size:10px;padding:7px 8px}.player-panel{padding:10px}.player-frame-wrap{min-height:180px}.upload-banner{align-items:flex-start;flex-direction:column}.channel-hero{align-items:flex-start}.channel-avatar{width:60px;height:60px;flex-basis:60px}.channel-name{font-size:19px}}
+    @media(max-width:430px){.grid{grid-template-columns:1fr}.video-title{min-height:0}.thumb{aspect-ratio:16/8}.hero h1{font-size:33px}.page-head h2{font-size:19px}.count{font-size:10px}}
+    </style>
 </head>
 <body>
-    <h1>Aire - Enciclopedia</h1>
-    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam<br>
-        sodales vulputate elementum. Praesent molestie venenatis ornare. Cras<br>
-        imperdiet iaculis elit quis rutrum. Etiam scelerisque est quam, eget<br>
-        hendrerit velit posuere eu. Praesent ultricies est et dui porta<br>
-        lacinia. Cras luctus condimentum ante vitae eleifend. Nulla facilisi.<br>
-        Phasellus eu viverra metus. Mauris vitae nibh faucibus, bibendum leo<br>
-        id, vestibulum mauris. Pellentesque vitae tristique tortor.<br>
-        Pellentesque pretium libero ac tellus hendrerit tincidunt. Donec eu<br>
-        porttitor est. Donec accumsan elit in felis interdum pretium. In<br>
-        consectetur enim vel mi rutrum, quis accumsan diam malesuada. Nunc<br>
-        arcu est, pretium et fermentum et, ullamcorper eu lacus. Cras blandit,<br>
-        tortor eget faucibus fringilla, ante leo dapibus augue, non ultricies<br>
-        ligula metus id mauris. Nam interdum maximus enim, eget dictum lorem<br>
-        fermentum in. Etiam rhoncus, lorem id efficitur viverra, mauris lacus<br>
-        accumsan orci, in venenatis quam mi in orci.<br>
-        Nullam et ullamcorper leo. Vivamus diam nisi, rhoncus ut auctor ac,<br>
-        viverra ac ante. Aenean metus enim, cursus non fringilla ut, efficitur<br>
-        vitae turpis. In tincidunt viverra nulla at tincidunt. Etiam et<br>
-        bibendum est, vitae venenatis purus. Fusce sit amet eros ac mi<br>
-        tincidunt tempus. Morbi ultrices, ligula quis viverra pellentesque,<br>
-        velit velit interdum mi, ac varius ex nisi a nisi. Cras egestas purus<br>
-        id leo consectetur, sed iaculis nibh facilisis. Vestibulum ante ipsum<br>
-        primis in faucibus orci luctus et ultrices posuere cubilia curae;<br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc orci<br>
-        neque, cursus ut malesuada nec, tristique non erat. Ut accumsan<br>
-        ultricies vehicula.<br>
-        Phasellus dignissim fringilla ligula, a fringilla orci pharetra vel.<br>
-        Curabitur finibus felis eget libero interdum feugiat. Integer nec<br>
-        purus porta, rhoncus felis sed, pharetra dolor. Fusce ultrices posuere<br>
-        erat, consequat mollis ante efficitur eget. Proin viverra augue auctor<br>
-        eros volutpat sagittis. In hac habitasse platea dictumst. Aenean eros<br>
-        mauris, porttitor vitae suscipit nec, ullamcorper a urna. Sed vel<br>
-        cursus quam, id molestie elit. Nulla tincidunt nulla tristique erat<br>
-        semper, sit amet suscipit justo consequat. Duis pretium orci dignissim<br>
-        varius varius. Curabitur convallis ligula eu rutrum finibus. Aliquam<br>
-        viverra, risus in tincidunt vestibulum, diam dui elementum lectus, et<br>
-        consequat eros odio sed nisl. Nam sollicitudin feugiat diam sit amet<br>
-        ultrices.<br>
-        Donec condimentum quam leo, sollicitudin elementum lacus molestie ac.<br>
-        Phasellus eget odio pretium, gravida enim quis, tempor arcu. Curabitur<br>
-        at sem enim. Cras ac aliquam erat. Aliquam vitae laoreet mauris, eu<br>
-        auctor risus. Nunc feugiat enim est, commodo rutrum turpis laoreet a.<br>
-        Curabitur tempus nisi urna, vitae posuere nunc porttitor in.</p>
+    <div class="titulo"><h1>Aire - Enciclopedia</h1></div>
+    <div class="titulo"><h2>Historia</h2></div>
+    <p>Mucho antes de que siquiera existiera el avatar, antepasados de los<br>
+        Nómadas Aire recibieron el elemento del Aire Control de los leones<br>
+        tortugas de aire que concedieron el arte a través de la Energía<br>
+        Control. los primeros Maestros Aire destacaron por convivir<br>
+        armoniosamente con los espíritus. Estas personas eventualmente<br>
+        formaron los primeros Nómadas Aire después de que los leones tortugas<br>
+        renunciaron a su papel como protectores de la humanidad. Finalmente,<br>
+        se concentraron en cuatro templos principales en las esquinas del<br>
+        globo, aunque también mantuvieron otros lugares sagrados. Muchos años<br>
+        despues los Nómadas Aire fueron víctimas del genocidio a manos de la<br>
+        Nación del Fuego. Irónicamente, el único superviviente conocido de la<br>
+        matanza fue la misma persona que la Nación del Fuego intentaba matar<br>
+        en su búsqueda de la supremacía: el Maestro Aire de doce años de edad,<br>
+        y Avatar, Aang</p>
+    <div class="titulo"><h2>Apariencia</h2></div>
+    <p>Los Nómadas Aire visten de amarillo y naranja. Aang y otros Maestro<br>
+        Aire jóvenes usan mantas naranjas sobre camisas amarillas de manga<br>
+        larga, un cinturón café, pantalones amarillos con la parte de atrás <br>
+        café, y botas café que llegan a las rodillas. Los monjes mayores<br>
+        vestían túnicas largas en tonos de amarillo y naranja, así como<br>
+        collares de madera con la insignia de los Nómadas Aire tallada en<br>
+        este. La mayoría Nómadas Aire tienen ojos grises o marrones y tez<br>
+        clara.<br>
+        Los muchachos jóvenes al ser entrenados como monjes, deben afeitar su<br>
+        cabeza mientras que los monjes mayores dejan crecer sus barbas y <br>
+        bigotes. Los Maestros Aire femeninos no se afeitan totalmente la<br>
+        cabeza, afeitando solo la parte delantera de su cabeza para que su<br>
+        flecha sea visible, la finalidad de afeitarse la cabeza es para sentir<br>
+        mas fácilmente los movimientos de un objeto o persona que se acerca a<br>
+        ellos. Se ha demostrado que cuando no se afeitaban, los Nómadas Aire<br>
+        tenían el pelo negro o marrón.<br>
+        Los Maestros Aire que han alcanzado un grado de maestría en el arte <br>
+        son marcados con tatuajes de flecha, basándose en las flechas del<br>
+        bisonte volador, los primeros Maestros Aire. Un tatuaje de flecha<br>
+        principal se coloca en la cabeza rapada que se extiende por su<br>
+        espalda, junto con otros cuatro, una en cada extremidad que termina en<br>
+        una punta de flecha en el dorso de las manos y en el empeine de los <br>
+        pies.</p>
+    <div class="titulo"><h2>Emblema</h2></div>
+    <img src="EmblemaNómadasAire.webp" alt="Emblema de los Nómadas Aire">
+    <div class="titulo"><h2>Geografía</h2></div>
+    <
 </body>
 </html>
