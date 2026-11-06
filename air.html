@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,14 +30,71 @@
     body{
         margin:0;
         background: radial-gradient(ellipse at 85% 10%, #1a3b5a 0%, transparent 38%), radial-gradient(ellipse at 0% 60%, #142d3e55 0%, transparent 33%), var(--bg);
-
         color:var(--text);
-        font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}button,input,textarea,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--blue);
-        outline-offset:2px}a{color:var(--blue);
-        display:flex;
-        align-items:center !important;
-        text-align: center !important;
+        font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
     }
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+        outline:2px solid var(--blue);
+        outline-offset:2px
+    }
+    a{
+        color:var(--blue);
+        text-decoration: none;
+    }
+
+    /* Estructura Principal */
+    .layout-container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Estilos de la Navbar Izquierda */
+    .sidebar {
+        width: 240px;
+        background-color: var(--panel);
+        border-right: 1px solid var(--line);
+        padding: 24px 16px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+    .sidebar-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--blue2);
+        margin-bottom: 20px;
+        text-align: left !important;
+        padding: 0;
+    }
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .sidebar-nav a {
+        padding: 10px 14px;
+        border-radius: 8px;
+        color: var(--muted);
+        transition: background 0.2s, color 0.2s;
+        text-align: left !important;
+        display: block;
+    }
+    .sidebar-nav a:hover {
+        background-color: var(--panel2);
+        color: var(--text);
+    }
+
+    /* Contenido Principal */
+    .main-content {
+        flex: 1;
+        padding: 20px 15px 40px;
+        overflow-x: hidden;
+    }
+
     h1, h2, p {
         text-align: center !important;
         max-width: 800px;
@@ -49,62 +106,129 @@
         background-color:var(--panel3);
         width: auto;
         height: auto;
+        border-radius: 8px;
+        padding: 4px 0;
+        margin-top: 20px;
+        margin-bottom: 10px;
     }
     img {
         display: block;
         margin-left: auto;
         margin-right: auto;
-        max-width: 100%; /* Opcional: para que se adapte bien a celulares */
+        max-width: 100%;
+        border-radius: 8px;
     }
-    @media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.shell{grid-template-columns:185px minmax(0,1fr)}.brand{flex-basis:210px}}
-    @media(max-width:760px){.topbar{height:auto;min-height:72px;flex-wrap:wrap;gap:11px;padding:12px 14px}.brand{flex:1}.brandtag{display:none}.brandtitle{font-size:17px}.searchbar{order:3;flex-basis:100%;max-width:none}.top-actions .btn{padding:10px 11px;font-size:12px}.shell{display:block}.sidebar{display:flex;gap:5px;padding:9px 12px;overflow:auto;border-right:0;border-bottom:1px solid var(--line)}.navbtn{width:auto;flex:0 0 auto;white-space:nowrap;margin:0;padding:10px 12px;font-size:12px}.sidebar-label,.element{display:none}.main{padding:18px 14px 38px}.hero{min-height:290px;padding:24px 21px}.hero h1{font-size:37px}.hero p{font-size:13px}.grid{gap:11px}.info{padding:10px}.video-title{font-size:12px;min-height:52px}.meta{font-size:9px}.actions{flex-wrap:wrap}.watch,.fav,.delete-video{font-size:10px;padding:7px 8px}.player-panel{padding:10px}.player-frame-wrap{min-height:180px}.upload-banner{align-items:flex-start;flex-direction:column}.channel-hero{align-items:flex-start}.channel-avatar{width:60px;height:60px;flex-basis:60px}.channel-name{font-size:19px}}
-    @media(max-width:430px){.grid{grid-template-columns:1fr}.video-title{min-height:0}.thumb{aspect-ratio:16/8}.hero h1{font-size:33px}.page-head h2{font-size:19px}.count{font-size:10px}}
+
+    /* Ajuste para pantallas pequeñas */
+    @media(max-width:760px){
+        .layout-container {
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            border-right: 0;
+            border-bottom: 1px solid var(--line);
+            padding: 12px;
+        }
+        .sidebar-nav {
+            flex-direction: row;
+            overflow-x: auto;
+        }
+        .sidebar-nav a {
+            white-space: nowrap;
+        }
+    }
     </style>
 </head>
 <body>
-    <div class="titulo"><h1>Aire - Enciclopedia</h1></div>
-    <div class="titulo"><h2>Historia</h2></div>
-    <p>Mucho antes de que siquiera existiera el avatar, antepasados de los<br>
-        Nómadas Aire recibieron el elemento del Aire Control de los leones<br>
-        tortugas de aire que concedieron el arte a través de la Energía<br>
-        Control. los primeros Maestros Aire destacaron por convivir<br>
-        armoniosamente con los espíritus. Estas personas eventualmente<br>
-        formaron los primeros Nómadas Aire después de que los leones tortugas<br>
-        renunciaron a su papel como protectores de la humanidad. Finalmente,<br>
-        se concentraron en cuatro templos principales en las esquinas del<br>
-        globo, aunque también mantuvieron otros lugares sagrados. Muchos años<br>
-        despues los Nómadas Aire fueron víctimas del genocidio a manos de la<br>
-        Nación del Fuego. Irónicamente, el único superviviente conocido de la<br>
-        matanza fue la misma persona que la Nación del Fuego intentaba matar<br>
-        en su búsqueda de la supremacía: el Maestro Aire de doce años de edad,<br>
-        y Avatar, Aang</p>
-    <div class="titulo"><h2>Apariencia</h2></div>
-    <p>Los Nómadas Aire visten de amarillo y naranja. Aang y otros Maestro<br>
-        Aire jóvenes usan mantas naranjas sobre camisas amarillas de manga<br>
-        larga, un cinturón café, pantalones amarillos con la parte de atrás <br>
-        café, y botas café que llegan a las rodillas. Los monjes mayores<br>
-        vestían túnicas largas en tonos de amarillo y naranja, así como<br>
-        collares de madera con la insignia de los Nómadas Aire tallada en<br>
-        este. La mayoría Nómadas Aire tienen ojos grises o marrones y tez<br>
-        clara.<br>
-        Los muchachos jóvenes al ser entrenados como monjes, deben afeitar su<br>
-        cabeza mientras que los monjes mayores dejan crecer sus barbas y <br>
-        bigotes. Los Maestros Aire femeninos no se afeitan totalmente la<br>
-        cabeza, afeitando solo la parte delantera de su cabeza para que su<br>
-        flecha sea visible, la finalidad de afeitarse la cabeza es para sentir<br>
-        mas fácilmente los movimientos de un objeto o persona que se acerca a<br>
-        ellos. Se ha demostrado que cuando no se afeitaban, los Nómadas Aire<br>
-        tenían el pelo negro o marrón.<br>
-        Los Maestros Aire que han alcanzado un grado de maestría en el arte <br>
-        son marcados con tatuajes de flecha, basándose en las flechas del<br>
-        bisonte volador, los primeros Maestros Aire. Un tatuaje de flecha<br>
-        principal se coloca en la cabeza rapada que se extiende por su<br>
-        espalda, junto con otros cuatro, una en cada extremidad que termina en<br>
-        una punta de flecha en el dorso de las manos y en el empeine de los <br>
-        pies.</p>
-    <div class="titulo"><h2>Emblema</h2></div>
-    <img src="EmblemaNómadasAire.webp" alt="Emblema de los Nómadas Aire">
-    <div class="titulo"><h2>Geografía</h2></div>
-    <
+
+    <div class="layout-container">
+        <!-- Navbar Izquierda -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Índice</h3>
+            <nav class="sidebar-nav">
+                <a href="#historia">Historia</a>
+                <a href="#apariencia">Apariencia</a>
+                <a href="#emblema">Emblema</a>
+                <a href="#geografia">Geografía</a>
+                <a href="#cultura">Cultura</a>
+            </nav>
+        </aside>
+
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <div class="titulo"><h1>Aire - Enciclopedia</h1></div>
+            
+            <div id="historia" class="titulo"><h2>Historia</h2></div>
+            <p>Mucho antes de que siquiera existiera el avatar, antepasados de los<br>
+                Nómadas Aire recibieron el elemento del Aire Control de los leones<br>
+                tortugas de aire que concedieron el arte a través de la Energía<br>
+                Control. los primeros Maestros Aire destacaron por convivir<br>
+                armoniosamente con los espíritus. Estas personas eventualmente<br>
+                formaron los primeros Nómadas Aire después de que los leones tortugas<br>
+                renunciaron a su papel como protectores de la humanidad. Finalmente,<br>
+                se concentraron en cuatro templos principales en las esquinas del<br>
+                globo, aunque también mantuvieron otros lugares sagrados. Muchos años<br>
+                despues los Nómadas Aire fueron víctimas del genocidio a manos de la<br>
+                Nación del Fuego. Irónicamente, el único superviviente conocido de la<br>
+                matanza fue la misma persona que la Nación del Fuego intentaba matar<br>
+                en su búsqueda de la supremacía: el Maestro Aire de doce años de edad,<br>
+                y Avatar, Aang</p>
+                
+            <div id="apariencia" class="titulo"><h2>Apariencia</h2></div>
+            <p>Los Nómadas Aire visten de amarillo y naranja. Aang y otros Maestro<br>
+                Aire jóvenes usan mantas naranjas sobre camisas amarillas de manga<br>
+                larga, un cinturón café, pantalones amarillos con la parte de atrás <br>
+                café, y botas café que llegan a las rodillas. Los monjes mayores<br>
+                vestían túnicas largas en tonos de amarillo y naranja, así como<br>
+                collares de madera con la insignia de los Nómadas Aire tallada en<br>
+                este. La mayoría Nómadas Aire tienen ojos grises o marrones y tez<br>
+                clara.<br>
+                Los muchachos jóvenes al ser entrenados como monjes, deben afeitar su<br>
+                cabeza mientras que los monjes mayores dejan crecer sus barbas y <br>
+                bigotes. Los Maestros Aire femeninos no se afeitan totalmente la<br>
+                cabeza, afeitando solo la parte delantera de su cabeza para que su<br>
+                flecha sea visible, la finalidad de afeitarse la cabeza es para sentir<br>
+                mas fácilmente los movimientos de un objeto o persona que se acerca a<br>
+                ellos. Se ha demostrado que cuando no se afeitaban, los Nómadas Aire<br>
+                tenían el pelo negro o marrón.<br>
+                Los Maestros Aire que han alcanzado un grado de maestría en el arte <br>
+                son marcados con tatuajes de flecha, basándose en las flechas del<br>
+                bisonte volador, los primeros Maestros Aire. Un tatuaje de flecha<br>
+                principal se coloca en la cabeza rapada que se extiende por su<br>
+                espalda, junto con otros cuatro, una en cada extremidad que termina en<br>
+                una punta de flecha en el dorso de las manos y en el empeine de los <br>
+                pies.</p>
+                
+            <div id="emblema" class="titulo"><h2>Emblema</h2></div>
+            <img src="EmblemaNómadasAire.webp" alt="Emblema de los Nómadas Aire">
+            
+            <div id="geografia" class="titulo"><h2>Geografía</h2></div>
+            <p>Los Nómadas Aire se encontraban en templos remotos en las montañas del<br>
+                mundo. Había cuatro templos en total, uno para cada dirección de la<br>
+                brújula. Dos eran para y dirigidos por hombres y dos eran para y<br>
+                dirigidos por mujeres. Los muchachos jóvenes del Templo del Aire del<br>
+                Sur se sabe que viajan al Templo Aire del Este para elegir su propio<br>
+                bisonte volador personal. Esto se consideraba una elección importante<br>
+                ya que inteligentes animales serían los compañeros de los Nómadas por<br>
+                el resto de sus vidas. Tres de los cinco templos, se encuentran en<br>
+                montañas, ya que el Templo Aire del Oeste se encuentra debajo de un<br>
+                acantilado y el Templo Aire de la Isla como su nombre lo indica esta<br>
+                en una isla no muy elevada al nivel del mar. Estos templos se<br>
+                encuentran en sus propios espacios o naciones, a excepción del Templo<br>
+                Aire del Norte que esta en montañas pertenecientes al Reino Tierra y<br>
+                el Templo Aire de la Isla que esta en la bahía de Ciudad República. </p>
+                
+            <div id="cultura" class="titulo"><h2>Cultura</h2></div>
+            <p>Mientras que otras naciones poseen realeza y están dirigidas por<br>
+                monarquías hereditarias, los nómadas del aire fueron dirigidos por los<br>
+                monjes y monjas superiores de los templos del aire. También creían en<br>
+                la igualdad para todos, que las personas deberían vivir sin divisiones<br>
+                en la sociedad.</p>
+        </main>
+    </div>
+
 </body>
 </html>
