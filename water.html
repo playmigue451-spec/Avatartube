@@ -4,51 +4,197 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agua - AVATAR TUBE</title>
+    <style>
+    :root{
+        --bg:#081321;
+        --panel:#101f32;
+        --panel2:#162a42;
+        --panel3:#203955;
+        --line:#ffffff18;
+        --text:#f4f8ff;
+        --muted:#9db0c8;
+        --blue:#69d1ff;
+        --blue2:#a9e9ff;
+        --orange:#ffad70;
+        --green:#80d9ac;
+        --gold:#f8d58c;
+        --r:18px;
+        --shadow:0 18px 55px #0005
+    }
+    *{
+        box-sizing:border-box
+    }
+    html{
+        scroll-behavior:smooth
+    }
+    body{
+        margin:0;
+        background: radial-gradient(ellipse at 85% 10%, #1a3b5a 0%, transparent 38%), radial-gradient(ellipse at 0% 60%, #142d3e55 0%, transparent 33%), var(--bg);
+        color:var(--text);
+        font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    }
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+        outline:2px solid var(--blue);
+        outline-offset:2px
+    }
+    a{
+        color:var(--blue);
+        text-decoration: none;
+    }
+
+    /* Estructura Principal */
+    .layout-container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Estilos de la Navbar Izquierda */
+    .sidebar {
+        width: 240px;
+        background-color: var(--panel);
+        border-right: 1px solid var(--line);
+        padding: 24px 16px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+    .sidebar-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--blue2);
+        margin-bottom: 20px;
+        text-align: left !important;
+        padding: 0;
+    }
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .sidebar-nav a {
+        padding: 10px 14px;
+        border-radius: 8px;
+        color: var(--muted);
+        transition: background 0.2s, color 0.2s;
+        text-align: left !important;
+        display: block;
+    }
+    .sidebar-nav a:hover {
+        background-color: var(--panel2);
+        color: var(--text);
+    }
+
+    /* Contenido Principal */
+    .main-content {
+        flex: 1;
+        padding: 20px 15px 40px;
+        overflow-x: hidden;
+    }
+
+    h1, h2, h3, p {
+        text-align: center !important;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 15px;
+    }
+    .titulo{
+        background-color:var(--panel3);
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        padding: 4px 0;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    /* Ajuste para pantallas pequeñas */
+    @media(max-width:760px){
+        .layout-container {
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            border-right: 0;
+            border-bottom: 1px solid var(--line);
+            padding: 12px;
+        }
+        .sidebar-nav {
+            flex-direction: row;
+            overflow-x: auto;
+        }
+        .sidebar-nav a {
+            white-space: nowrap;
+        }
+    }
+    </style>
 </head>
 <body>
-    <h1>Agua - Enciclopedia</h1>
-    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam<br>
-        sodales vulputate elementum. Praesent molestie venenatis ornare. Cras<br>
-        imperdiet iaculis elit quis rutrum. Etiam scelerisque est quam, eget<br>
-        hendrerit velit posuere eu. Praesent ultricies est et dui porta<br>
-        lacinia. Cras luctus condimentum ante vitae eleifend. Nulla facilisi.<br>
-        Phasellus eu viverra metus. Mauris vitae nibh faucibus, bibendum leo<br>
-        id, vestibulum mauris. Pellentesque vitae tristique tortor.<br>
-        Pellentesque pretium libero ac tellus hendrerit tincidunt. Donec eu<br>
-        porttitor est. Donec accumsan elit in felis interdum pretium. In<br>
-        consectetur enim vel mi rutrum, quis accumsan diam malesuada. Nunc<br>
-        arcu est, pretium et fermentum et, ullamcorper eu lacus. Cras blandit,<br>
-        tortor eget faucibus fringilla, ante leo dapibus augue, non ultricies<br>
-        ligula metus id mauris. Nam interdum maximus enim, eget dictum lorem<br>
-        fermentum in. Etiam rhoncus, lorem id efficitur viverra, mauris lacus<br>
-        accumsan orci, in venenatis quam mi in orci.<br>
-        Nullam et ullamcorper leo. Vivamus diam nisi, rhoncus ut auctor ac,<br>
-        viverra ac ante. Aenean metus enim, cursus non fringilla ut, efficitur<br>
-        vitae turpis. In tincidunt viverra nulla at tincidunt. Etiam et<br>
-        bibendum est, vitae venenatis purus. Fusce sit amet eros ac mi<br>
-        tincidunt tempus. Morbi ultrices, ligula quis viverra pellentesque,<br>
-        velit velit interdum mi, ac varius ex nisi a nisi. Cras egestas purus<br>
-        id leo consectetur, sed iaculis nibh facilisis. Vestibulum ante ipsum<br>
-        primis in faucibus orci luctus et ultrices posuere cubilia curae;<br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc orci<br>
-        neque, cursus ut malesuada nec, tristique non erat. Ut accumsan<br>
-        ultricies vehicula.<br>
-        Phasellus dignissim fringilla ligula, a fringilla orci pharetra vel.<br>
-        Curabitur finibus felis eget libero interdum feugiat. Integer nec<br>
-        purus porta, rhoncus felis sed, pharetra dolor. Fusce ultrices posuere<br>
-        erat, consequat mollis ante efficitur eget. Proin viverra augue auctor<br>
-        eros volutpat sagittis. In hac habitasse platea dictumst. Aenean eros<br>
-        mauris, porttitor vitae suscipit nec, ullamcorper a urna. Sed vel<br>
-        cursus quam, id molestie elit. Nulla tincidunt nulla tristique erat<br>
-        semper, sit amet suscipit justo consequat. Duis pretium orci dignissim<br>
-        varius varius. Curabitur convallis ligula eu rutrum finibus. Aliquam<br>
-        viverra, risus in tincidunt vestibulum, diam dui elementum lectus, et<br>
-        consequat eros odio sed nisl. Nam sollicitudin feugiat diam sit amet<br>
-        ultrices.<br>
-        Donec condimentum quam leo, sollicitudin elementum lacus molestie ac.<br>
-        Phasellus eget odio pretium, gravida enim quis, tempor arcu. Curabitur<br>
-        at sem enim. Cras ac aliquam erat. Aliquam vitae laoreet mauris, eu<br>
-        auctor risus. Nunc feugiat enim est, commodo rutrum turpis laoreet a.<br>
-        Curabitur tempus nisi urna, vitae posuere nunc porttitor in.</p>
+    <div class="layout-container">
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Índice</h3>
+            <nav class="sidebar-nav">
+                <a href="#historia">Historia</a>
+                <a href="#ubicaciones">Ubicaciones</a>
+                <a href="#apariencia">Apariencia</a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="titulo"><h1>Agua - Enciclopedia</h1></div>
+            <div id="historia" class="titulo"><h2>Historia</h2></div>
+            <p>Mucho antes de que si quiera existiera el avatar, antecesores de la<br>
+                Tribu Agua recibían el Agua Control de una león tortuga que les daba<br>
+                este control por medio de la Energía Control. Estas personas<br>
+                eventualmente construyeron la Tribu Agua después de que las Tortugas<br>
+                León no necesitaban protegerlos. Los ancestros de los habitantes de la<br>
+                Tribu Agua dejaron las León Tortugas y se organizaron en el Polo Norte<br>
+                debido a las facilidades de manipular el agua allí.</p>
+            <div id="ubicaciones" class="titulo"><h2>Ubicaciones</h2></div>
+            <div class="titulo"><h3>Tribu Agua del Norte</h3></div>
+            <p>Se sitúa una gran ciudad hecha de hielo y nieve. Flanqueada por pasos<br>
+                hechos de hielo, las calles de la ciudad son canales, los que la gente<br>
+                cruza en góndolas.</p>
+            <div class="titulo"><h3>Tribu Agua del Sur</h3></div>
+            <p>La Tribu Agua del Sur es la segunda facción importante de la Tribu<br>
+                Agua. Antiguamente sus habitantes están dispersos en pequeños<br>
+                asentamientos ubicados en el Polo Sur pero al final de la guerra<br>
+                creció en una gran metrópoli.</p>
+            <div class="titulo"><h3>Tribu Agua del pantano</h3></div>
+            <p>La Tribu Agua del Pantano es una tribu de Maestros Agua que viven en un<br>
+                místico Pantano en el Reino Tierra. El pantano en realidad consiste,<br>
+                en gran parte, por un solo árbol gigante, cuyas raíces se han<br>
+                esparcido a lo largo de un vasto territorio.</p>
+            <div id="apariencia" class="titulo"><h2>Apariencia</h2></div>
+            <p>Étnicamente homogénea, los miembros de ambas tribus suelen tener el<br>
+                pelo castaño claro u oscuro, los ojos de color azul o gris y un tono<br>
+                de tez morena clara. La ropa Tribu Agua es generalmente un conjunto de<br>
+                anorak azul y pantalones forrados y con adornos de piel blanca, y<br>
+                usado con guantes y botas esquimales. Los hombres pueden llevar el<br>
+                pelo largo o en una cola de caballo corta, también conocida como<br>
+                "cola de lobo guerrera". Las mujeres trenzan su pelo en estilos<br>
+                diferentes, a veces con acentuando sus rodetes y muchas utilizan<br>
+                "trencitas" en varios estilos. En la Tribu Agua del Sur, las mujeres<br>
+                han demostrado usar su pelo en un moño con una cinta decorativa. En la<br>
+                Tribu Agua del Norte, los hombres parecen llevar una cinta azul más<br>
+                oscura que los de la Tribu Agua del Sur, y la realeza a menudo lleva<br>
+                púrpura. En la Tribu Agua del Pantano, usan muy poca ropa, sólo<br>
+                utilizan hojas-sombreros, taparrabos, y pulseras, todo en verde, lo<br>
+                que refleja el color del agua y su entorno. </p>
+            <p>Todo lo mostrado en esta enciclopedia es un resumen de la <a href="https://avatar.fandom.com/wiki/Avatar_Wiki">wiki oficial</a></p>
+        </main>
+    </div>
 </body>
 </html>
