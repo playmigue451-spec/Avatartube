@@ -4,51 +4,235 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tierra - AVATAR TUBE</title>
+    <style>:root{
+        --bg:#081321;
+        --panel:#101f32;
+        --panel2:#162a42;
+        --panel3:#203955;
+        --line:#ffffff18;
+        --text:#f4f8ff;
+        --muted:#9db0c8;
+        --blue:#69d1ff;
+        --blue2:#a9e9ff;
+        --orange:#ffad70;
+        --green:#80d9ac;
+        --gold:#f8d58c;
+        --r:18px;
+        --shadow:0 18px 55px #0005
+    }
+    *{
+        box-sizing:border-box
+    }
+    html{
+        scroll-behavior:smooth
+    }
+    body{
+        margin:0;
+        background: radial-gradient(ellipse at 85% 10%, #1a3b5a 0%, transparent 38%), radial-gradient(ellipse at 0% 60%, #142d3e55 0%, transparent 33%), var(--bg);
+        color:var(--text);
+        font:15px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    }
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{
+        outline:2px solid var(--blue);
+        outline-offset:2px
+    }
+    a{
+        color:var(--blue);
+        text-decoration: none;
+    }
+
+    /* Estructura Principal */
+    .layout-container {
+        display: flex;
+        min-height: 100vh;
+    }
+
+    /* Estilos de la Navbar Izquierda */
+    .sidebar {
+        width: 240px;
+        background-color: var(--panel);
+        border-right: 1px solid var(--line);
+        padding: 24px 16px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+    .sidebar-title {
+        font-size: 18px;
+        font-weight: bold;
+        color: var(--blue2);
+        margin-bottom: 20px;
+        text-align: left !important;
+        padding: 0;
+    }
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .sidebar-nav a {
+        padding: 10px 14px;
+        border-radius: 8px;
+        color: var(--muted);
+        transition: background 0.2s, color 0.2s;
+        text-align: left !important;
+        display: block;
+    }
+    .sidebar-nav a:hover {
+        background-color: var(--panel2);
+        color: var(--text);
+    }
+
+    /* Contenido Principal */
+    .main-content {
+        flex: 1;
+        padding: 20px 15px 40px;
+        overflow-x: hidden;
+    }
+
+    h1, h2, h3, p {
+        text-align: center !important;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 15px;
+    }
+    .titulo{
+        background-color:var(--panel3);
+        width: auto;
+        height: auto;
+        border-radius: 8px;
+        padding: 4px 0;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    /* Ajuste para pantallas pequeñas */
+    @media(max-width:760px){
+        .layout-container {
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 100%;
+            height: auto;
+            position: relative;
+            border-right: 0;
+            border-bottom: 1px solid var(--line);
+            padding: 12px;
+        }
+        .sidebar-nav {
+            flex-direction: row;
+            overflow-x: auto;
+        }
+        .sidebar-nav a {
+            white-space: nowrap;
+        }
+    }
+    </style>
 </head>
 <body>
-    <h1>Tierra - Enciclopedia</h1>
-    <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam<br>
-        sodales vulputate elementum. Praesent molestie venenatis ornare. Cras<br>
-        imperdiet iaculis elit quis rutrum. Etiam scelerisque est quam, eget<br>
-        hendrerit velit posuere eu. Praesent ultricies est et dui porta<br>
-        lacinia. Cras luctus condimentum ante vitae eleifend. Nulla facilisi.<br>
-        Phasellus eu viverra metus. Mauris vitae nibh faucibus, bibendum leo<br>
-        id, vestibulum mauris. Pellentesque vitae tristique tortor.<br>
-        Pellentesque pretium libero ac tellus hendrerit tincidunt. Donec eu<br>
-        porttitor est. Donec accumsan elit in felis interdum pretium. In<br>
-        consectetur enim vel mi rutrum, quis accumsan diam malesuada. Nunc<br>
-        arcu est, pretium et fermentum et, ullamcorper eu lacus. Cras blandit,<br>
-        tortor eget faucibus fringilla, ante leo dapibus augue, non ultricies<br>
-        ligula metus id mauris. Nam interdum maximus enim, eget dictum lorem<br>
-        fermentum in. Etiam rhoncus, lorem id efficitur viverra, mauris lacus<br>
-        accumsan orci, in venenatis quam mi in orci.<br>
-        Nullam et ullamcorper leo. Vivamus diam nisi, rhoncus ut auctor ac,<br>
-        viverra ac ante. Aenean metus enim, cursus non fringilla ut, efficitur<br>
-        vitae turpis. In tincidunt viverra nulla at tincidunt. Etiam et<br>
-        bibendum est, vitae venenatis purus. Fusce sit amet eros ac mi<br>
-        tincidunt tempus. Morbi ultrices, ligula quis viverra pellentesque,<br>
-        velit velit interdum mi, ac varius ex nisi a nisi. Cras egestas purus<br>
-        id leo consectetur, sed iaculis nibh facilisis. Vestibulum ante ipsum<br>
-        primis in faucibus orci luctus et ultrices posuere cubilia curae;<br>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc orci<br>
-        neque, cursus ut malesuada nec, tristique non erat. Ut accumsan<br>
-        ultricies vehicula.<br>
-        Phasellus dignissim fringilla ligula, a fringilla orci pharetra vel.<br>
-        Curabitur finibus felis eget libero interdum feugiat. Integer nec<br>
-        purus porta, rhoncus felis sed, pharetra dolor. Fusce ultrices posuere<br>
-        erat, consequat mollis ante efficitur eget. Proin viverra augue auctor<br>
-        eros volutpat sagittis. In hac habitasse platea dictumst. Aenean eros<br>
-        mauris, porttitor vitae suscipit nec, ullamcorper a urna. Sed vel<br>
-        cursus quam, id molestie elit. Nulla tincidunt nulla tristique erat<br>
-        semper, sit amet suscipit justo consequat. Duis pretium orci dignissim<br>
-        varius varius. Curabitur convallis ligula eu rutrum finibus. Aliquam<br>
-        viverra, risus in tincidunt vestibulum, diam dui elementum lectus, et<br>
-        consequat eros odio sed nisl. Nam sollicitudin feugiat diam sit amet<br>
-        ultrices.<br>
-        Donec condimentum quam leo, sollicitudin elementum lacus molestie ac.<br>
-        Phasellus eget odio pretium, gravida enim quis, tempor arcu. Curabitur<br>
-        at sem enim. Cras ac aliquam erat. Aliquam vitae laoreet mauris, eu<br>
-        auctor risus. Nunc feugiat enim est, commodo rutrum turpis laoreet a.<br>
-        Curabitur tempus nisi urna, vitae posuere nunc porttitor in.</p>
+    <div class="layout-container">
+        <aside class="sidebar">
+            <h3 class="sidebar-title">Índice</h3>
+            <nav class="sidebar-nav">
+                <a href="#historia">Historia</a>
+                <a href="#apariencia">Apariencia</a>
+                <a href="#emblema">Emblema</a>
+                <a href="#geografia">Geografía</a>
+                <a href="#cultura">Cultura</a>
+            </nav>
+        </aside>
+        <main class="main-content">
+            <div class="titulo"><h1>Tierra - Enciclopedia</h1></div>
+            <div class="titulo" id="historia"><h2>Historia</h2></div>
+            <p>Mucho antes de que siquiera existiera el avatar, la mayor parte del<br>
+                Reino Tierra era parte de la Selva de los Espíritus. Los predecesores<br>
+                del Reino Tierra encontraron varias formas de sobrevivir a estas <br>
+                dificultades: Algunos se retiraron a ciudades construidas sobre Leones<br>
+                tortuga, Otros eligieron un estilo de vida nómada. Con el tiempo,<br>
+                Varios aspectos de la vida y las prácticas practicadas por los<br>
+                predecesores de los primeros ciudadanos del Reino Tierra se<br>
+                convirtieron más tarde en parte de la cultura compartida de la nación,<br>
+                en particular en la creación de fortalezas fortificadas construidas<br>
+                tierra. Después de que el Avatar Wan cerró los portales de los <br>
+                espíritus y la mayoría de los espíritus abandonaron el mundo mortal,<br>
+                los leones tortuga renunciaron a sus roles como protectores de la<br>
+                humanidad. Poco después, los antepasados de los primeros ciudadanos<br>
+                del Reino Tierra comenzaron a librar guerras, inventando las Grandes<br>
+                monedas de tierra como armas principales para que las usaran sus<br>
+                maestros tierra.<br>
+                Nota de los autores:<br>
+                El escritor principal de esta enciclopedia no ha podido terminar la<br>
+                historia completa del Reino Tierra porque cierta persona<br>
+                (cof, cof... mi "competente" líder de proyecto) no ayuda lo<br>
+                suficiente. Te tocará esperar a las próximas actualizaciones. XD</p>
+            <div class="titulo" id="apariencia"><h2>Apariencia</h2></div>
+            <p>Los ciudadanos del Reino Tierra tienden a tener el pelo negro o marrón<br>
+                y ojos verdes, marrones o grises; y a menudo tienen tonos de piel<br>
+                oscura, aunque muchos nobles tienen la tez más clara. Los colores<br>
+                tradicionales usados ​​en todo el Reino van de verdes y amarillos<br>
+                vibrantes a marrones y beiges más neutros. La gente por lo general se<br>
+                peina cómodamente para trabajar o de manera extravagante para<br>
+                impresiones sorprendentes. Los miembros del ejército visten uniformes<br>
+                verdes y beige que pueden tener toques de amarillo en ellos, y ocultar<br>
+                su cabello en un casco cónico. Sin embargo, la moda en el Reino Tierra<br>
+                varía mucho de una región a otra. En el oeste y el sur, los hombres<br>
+                suelen llevar el pelo en un moño, adornado con distintos alfileres, y<br>
+                a menudo tienen barba y/o bigote. Las mujeres que viven en las partes<br>
+                occidentales y meridionales del Reino Tierra llevan el pelo suelto o<br>
+                apilado en la parte superior de su cabeza. En Ba Sing Se, sin embargo,<br>
+                las mujeres suelen llevar el pelo largo envuelto alrededor de un<br>
+                soporte, adornada con borlas y flores, los hombres suelen llevar una<br>
+                cola de caballo normal. Los ciudadanos Omashu suelen llevar túnicas<br>
+                sobre una túnica larga o pantalones, con su cabello oculto por un<br>
+                pequeño turbante o sombrero. Los agricultores y otros trabajadores<br>
+                llevan sombreros de paja cónicos fijados a la cabeza con una cuerda<br>
+                para protegerlos del sol. </p>
+                <div class="titulo" id="emblema"><h2>Emblema</h2></div>
+                <img src="EmblemaReinoTierra.webp" alt="Emblema del reino de la tierra">
+                <div class="titulo" id="geografia"><h2>Geografía</h2></div>
+                <p>La geografía del Reino Tierra varía enormemente debido a su inmenso<br>
+                    tamaño. Las áreas del noroeste están cubiertas de densos bosques<br>
+                    de coníferas, mientras que la costa oeste posee un clima más<br>
+                    cálido y muchos bosques caducifolios. El oeste del interior es<br>
+                    también el hogar de varios pantanos y la árida zona que incluye a<br>
+                    la Gran División, mientras que el centro del Reino está compuesto<br>
+                    por el enorme Desierto de Si Wong. La costa suroeste está cubierto<br>
+                    de frondosos bosques, sin embargo, una sombra de la lluvia sale de<br>
+                    las zonas suroeste de la Cordillera Kolau, unas montañas áridas<br>
+                    con pastizales ralos, el único asentamiento importante en el área<br>
+                    es Omashu que pasó a manos de la Nación del Fuego y cambió el<br>
+                    nombre de la ciudad de Nuevo Ozai, hasta que más tarde fue<br>
+                    recuperada. La costa sur es una zona exuberante llena de ríos y<br>
+                    zonas boscosas, pobladas por pueblos ricos como Gaoling; al norte,<br>
+                    sobre las montañas, la tierra se convierte en llanuras escasamente<br>
+                    pobladas que una vez más se funden en el Desierto de Si Wong. El<br>
+                    noreste es mayormente deshabitado más allá de Ba Sing Se, que<br>
+                    consiste principalmente de montañas áridas y bosques de coníferas.</p>
+                <div class="titulo" id="cultura"><h2>Cultura</h2></div>
+                <p>Desde la cultura de Ba Sing Se, a los habitantes inicialmente<br>
+                    aislacionistas de la Isla Kyoshi, la cultura del Reino Tierra es<br>
+                    mucho menos definida que los de las demás naciones. Esto es debido<br>
+                    a su inmenso tamaño. Debido a su manipulación de la tierra, que<br>
+                    Iroh se refiere como el "elemento de la solidez", los Maestros<br>
+                    Tierra son prácticamente inamovibles, como se refleja en la <br>
+                    personalidad de los ciudadanos del Reino Tierra. Muchos indicios<br>
+                    indican que los creadores de la serie se basaron en la cultura<br>
+                    china y coreana, con referencia a los peinados, la arquitectura y<br>
+                    la geografía</p>
+                <p>Todo lo mostrado en esta enciclopedia es un resumen de la <a href="https://avatar.fandom.com/wiki/Avatar_Wiki">wiki oficial</a></p>
+        </main>
+    </div>
 </body>
 </html>
